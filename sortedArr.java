@@ -1,0 +1,17 @@
+class sortedArr{
+    public static boolean sort(int arr[],int idx){
+        if(idx==arr.length-1){//BAse case
+            return true;
+        }
+        if(arr[idx]<arr[idx+1]){
+            return sort(arr,idx+1);
+        }else{
+            return false;
+        }
+    }
+    public static void main(String args[]){
+        int arr[]={1,2,3};
+        System.out.println(sort(arr,0));
+    }
+
+}
