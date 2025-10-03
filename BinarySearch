@@ -1,7 +1,6 @@
 import java.util.*;
 import java.util.Arrays;
 public class BinarySearch {
-
     public static int binarySearch(int[] arr, int s) {
         int left = 0;
         int right = arr.length - 1;
@@ -20,7 +19,6 @@ public class BinarySearch {
         }
         return -1; 
     }
-    
     public static void main(String[] args) {
         Scanner sc=new Scanner(System.in);
         int[] Array = {2, 5, 8, 12, 16, 23,32};
@@ -35,7 +33,5 @@ public class BinarySearch {
         else{
             System.out.println(target+" found at "+index);
         }
-
-        
     }
 }
