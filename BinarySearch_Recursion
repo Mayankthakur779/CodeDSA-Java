@@ -1,0 +1,32 @@
+import java.util.*;
+class BinarySearch_recur{
+    public static int binarySearch(int[] arr, int left, int right, int s) {
+            if(left>right){
+                return -1;
+            }
+            int mid = (right+left)/ 2;
+            if (arr[mid] == s) {
+                return mid; 
+            } else if (arr[mid] < s) {
+                return binarySearch(arr, mid+1, right,s);
+            } else {
+                return binarySearch(arr,left, mid-1,s);
+            }
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        int[] Array = {2, 5, 8, 12, 16, 23,32};
+        System.out.println("Array: "+Arrays.toString(Array));
+        System.out.println("Enter the number want to Search: ");
+        int target=sc.nextInt();
+
+        int index= binarySearch(Array,0,Array.length-1,target);
+        if(index==-1){
+            System.out.println("Number not found ");
+        }
+        else{
+            System.out.println(target+" found at "+index);
+        }
+    }
+}
