@@ -1,0 +1,32 @@
+class Solution {
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        List<List<int[]>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+
+        for (int[] f : flights) {
+            graph.get(f[0]).add(new int[]{f[1], f[2]});
+        }
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.offer(new int[]{src, 0, 0});
+
+        int[] stops = new int[n];
+        Arrays.fill(stops, Integer.MAX_VALUE);
+
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int node = curr[0], cost = curr[1], step = curr[2];
+
+            if (node == dst) return cost;
+            if (step > k || step > stops[node]) continue;
+
+            stops[node] = step;
+
+            for (int[] nei : graph.get(node)) {
+                pq.offer(new int[]{nei[0], cost + nei[1], step + 1});
+            }
+        }
+
+        return -1;
+    }
+}
