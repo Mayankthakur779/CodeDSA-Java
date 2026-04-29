@@ -1,0 +1,77 @@
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        Set<String> dict = new HashSet<>(wordList);
+        List<List<String>> res = new ArrayList<>();
+
+        if (!dict.contains(endWord)) return res;
+
+        Map<String, List<String>> graph = new HashMap<>();
+        Map<String, Integer> level = new HashMap<>();
+
+        bfs(beginWord, endWord, dict, graph, level);
+
+        List<String> path = new ArrayList<>();
+        path.add(beginWord);
+        dfs(beginWord, endWord, graph, level, res, path);
+
+        return res;
+    }
+
+    void bfs(String start, String end, Set<String> dict,
+             Map<String, List<String>> graph, Map<String, Integer> level) {
+
+        Queue<String> q = new LinkedList<>();
+        q.offer(start);
+        level.put(start, 0);
+
+        while (!q.isEmpty()) {
+            String word = q.poll();
+            int currLevel = level.get(word);
+
+            char[] arr = word.toCharArray();
+
+            for (int i = 0; i < arr.length; i++) {
+                char original = arr[i];
+
+                for (char c = 'a'; c <= 'z'; c++) {
+                    arr[i] = c;
+                    String next = new String(arr);
+
+                    if (!dict.contains(next)) continue;
+
+                    graph.putIfAbsent(word, new ArrayList<>());
+                    graph.get(word).add(next);
+
+                    if (!level.containsKey(next)) {
+                        level.put(next, currLevel + 1);
+                        q.offer(next);
+                    }
+                }
+
+                arr[i] = original;
+            }
+        }
+    }
+
+    void dfs(String curr, String end,
+             Map<String, List<String>> graph,
+             Map<String, Integer> level,
+             List<List<String>> res,
+             List<String> path) {
+
+        if (curr.equals(end)) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+
+        if (!graph.containsKey(curr)) return;
+
+        for (String next : graph.get(curr)) {
+            if (level.get(next) == level.get(curr) + 1) {
+                path.add(next);
+                dfs(next, end, graph, level, res, path);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+}
