@@ -1,0 +1,73 @@
+import java.util.*;
+
+class Solution {
+
+    public int lengthOfLIS(int[] nums, int k) {
+        int maxVal = 0;
+        for (int num : nums) maxVal = Math.max(maxVal, num);
+
+        SegmentTree seg = new SegmentTree(maxVal + 1);
+
+        int ans = 0;
+
+        for (int num : nums) {
+            int left = Math.max(0, num - k);
+            int right = num - 1;
+
+            int best = seg.query(left, right);
+            int curr = best + 1;
+
+            seg.update(num, curr);
+            ans = Math.max(ans, curr);
+        }
+
+        return ans;
+    }
+
+    class SegmentTree {
+        int[] tree;
+        int size;
+
+        SegmentTree(int n) {
+            size = n;
+            tree = new int[4 * n];
+        }
+
+        void update(int index, int value) {
+            update(0, 0, size - 1, index, value);
+        }
+
+        void update(int node, int start, int end, int idx, int val) {
+            if (start == end) {
+                tree[node] = Math.max(tree[node], val);
+                return;
+            }
+
+            int mid = (start + end) / 2;
+
+            if (idx <= mid) {
+                update(2 * node + 1, start, mid, idx, val);
+            } else {
+                update(2 * node + 2, mid + 1, end, idx, val);
+            }
+
+            tree[node] = Math.max(tree[2 * node + 1], tree[2 * node + 2]);
+        }
+
+        int query(int l, int r) {
+            return query(0, 0, size - 1, l, r);
+        }
+
+        int query(int node, int start, int end, int l, int r) {
+            if (r < start || end < l) return 0;
+            if (l <= start && end <= r) return tree[node];
+
+            int mid = (start + end) / 2;
+
+            return Math.max(
+                query(2 * node + 1, start, mid, l, r),
+                query(2 * node + 2, mid + 1, end, l, r)
+            );
+        }
+    }
+}
