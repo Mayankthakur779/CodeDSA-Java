@@ -1,0 +1,37 @@
+import java.util.*;
+
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        int[] freq = new int[26];
+        for (char t : tasks) {
+            freq[t - 'A']++;
+        }
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for (int f : freq) {
+            if (f > 0) pq.offer(f);
+        }
+
+        int time = 0;
+
+        while (!pq.isEmpty()) {
+            List<Integer> temp = new ArrayList<>();
+            int cycle = n + 1;
+
+            while (cycle > 0 && !pq.isEmpty()) {
+                int curr = pq.poll();
+                if (curr - 1 > 0) temp.add(curr - 1);
+                time++;
+                cycle--;
+            }
+
+            for (int t : temp) pq.offer(t);
+
+            if (pq.isEmpty()) break;
+
+            time += cycle; // idle time
+        }
+
+        return time;
+    }
+}
