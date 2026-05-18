@@ -1,0 +1,72 @@
+import java.util.*;
+
+class Solution {
+
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+
+        List<int[]> events = new ArrayList<>();
+
+        // create events
+        for (int[] b : buildings) {
+            events.add(new int[]{b[0], -b[2]}); // start
+            events.add(new int[]{b[1], b[2]});  // end
+        }
+
+        // sort events
+        Collections.sort(events, (a, b) -> {
+            if (a[0] != b[0]) {
+                return a[0] - b[0];
+            }
+            return a[1] - b[1];
+        });
+
+        List<List<Integer>> result = new ArrayList<>();
+
+        PriorityQueue<Integer> maxHeap =
+            new PriorityQueue<>(Collections.reverseOrder());
+
+        Map<Integer, Integer> count = new HashMap<>();
+
+        maxHeap.offer(0);
+        count.put(0, 1);
+
+        int prevMax = 0;
+
+        for (int[] e : events) {
+
+            int x = e[0];
+            int h = e[1];
+
+            // start building
+            if (h < 0) {
+                h = -h;
+
+                maxHeap.offer(h);
+                count.put(h, count.getOrDefault(h, 0) + 1);
+            }
+
+            // end building
+            else {
+                count.put(h, count.get(h) - 1);
+            }
+
+            // lazy removal
+            while (!maxHeap.isEmpty()
+                && count.getOrDefault(maxHeap.peek(), 0) == 0) {
+
+                maxHeap.poll();
+            }
+
+            int currMax = maxHeap.peek();
+
+            // skyline changed
+            if (currMax != prevMax) {
+
+                result.add(Arrays.asList(x, currMax));
+                prevMax = currMax;
+            }
+        }
+
+        return result;
+    }
+}
