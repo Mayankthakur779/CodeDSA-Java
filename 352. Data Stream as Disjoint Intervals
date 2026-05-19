@@ -1,0 +1,40 @@
+import java.util.*;
+
+class SummaryRanges {
+
+    private TreeMap<Integer, int[]> map;
+
+    public SummaryRanges() {
+        map = new TreeMap<>();
+    }
+
+    public void addNum(int value) {
+
+        if (map.containsKey(value)) return;
+
+        Integer lowerKey = map.floorKey(value);
+        Integer higherKey = map.ceilingKey(value);
+
+        int start = value;
+        int end = value;
+
+        // merge with left interval
+        if (lowerKey != null && map.get(lowerKey)[1] + 1 >= value) {
+            start = map.get(lowerKey)[0];
+            end = Math.max(end, map.get(lowerKey)[1]);
+            map.remove(lowerKey);
+        }
+
+        // merge with right interval
+        if (higherKey != null && higherKey - 1 <= end) {
+            end = map.get(higherKey)[1];
+            map.remove(higherKey);
+        }
+
+        map.put(start, new int[]{start, end});
+    }
+
+    public int[][] getIntervals() {
+        return map.values().toArray(new int[map.size()][]);
+    }
+}
