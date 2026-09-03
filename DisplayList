@@ -1,0 +1,43 @@
+package LinkedList;
+class Node{
+    int val; //value of node itself
+    Node next; //address of next node by default the value is null if not linked to other nodes
+    Node (int val){   // constructor
+        this.val=val;
+    }
+}
+
+public class DisplayList {
+    public static void displayRec(Node head){
+        if (head== null){
+                return;}
+        System.out.print(head.val+" ");
+        displayRec(head.next);
+
+    }
+//    public static void display(Node head){
+//        Node temp= head;
+//        while (temp!=null){
+//            System.out.print(temp.val+" ");
+//            temp = temp.next; // to go to the next node to traverse throughout the LL
+//        }
+//
+//    }
+    public static void main(String[] args){
+        Node a= new Node(10);
+        Node b= new Node(20);
+        Node c= new Node(30);
+        Node d= new Node(40);
+        Node e= new Node(50);
+
+
+        // linking the nodes
+        a.next=b;
+        b.next=c;
+        c.next=d;
+        d.next=e;
+        displayRec(a);
+//        display(a);
+    }
+
+}
