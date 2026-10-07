@@ -1,31 +1,37 @@
-import java.util.*;
-
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
-
-        PriorityQueue<ListNode> pq =
-            new PriorityQueue<>((a, b) -> a.val - b.val);
-
-        for (ListNode node : lists) {
-            if (node != null) {
-                pq.offer(node);
-            }
+        if(lists.length == 0) return null;
+        ArrayList <ListNode> arr=new ArrayList<>();
+        for(ListNode n:lists) arr.add(n);
+        while(arr.size()>1){
+            ListNode a=arr.get(arr.size()-1);
+            arr.remove(arr.size()-1);
+            ListNode b=arr.get(arr.size()-1);
+            arr.remove(arr.size()-1);
+            ListNode c=merge(a,b);
+            arr.add(c);
         }
-
-        ListNode dummy = new ListNode(0);
-        ListNode tail = dummy;
-
-        while (!pq.isEmpty()) {
-
-            ListNode curr = pq.poll();
-            tail.next = curr;
-            tail = tail.next;
-
-            if (curr.next != null) {
-                pq.offer(curr.next);
-            }
-        }
-
-        return dummy.next;
+        return arr.get(0);
     }
+
+ListNode merge(ListNode head1,ListNode head2){
+    ListNode i=head1;
+    ListNode j=head2;
+    ListNode dummy=new ListNode(-1);
+    ListNode k=dummy;
+    while (i!=null && j!=null){
+        if(i.val <= j.val){
+            k.next=i;
+            i=i.next;
+        }
+        else{
+            k.next=j;
+            j=j.next;
+        }
+        k=k.next;
+    }
+    if(i==null) k.next=j;
+    else k.next=i;
+    return dummy.next;
+}
 }
