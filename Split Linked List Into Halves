@@ -1,0 +1,27 @@
+class Solution {
+    public Pair<Node, Node> splitList(Node head) {
+        if (head == null) return new Pair<>(null, null);
+        if (head.next == head) return new Pair<>(head, null); // single node
+
+        Node slow = head, fast = head;
+
+        // stop when fast is at the last node (odd length)
+        // or at the second-last node (even length)
+        while (fast.next != head && fast.next.next != head) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // even length: move fast to the last node
+        if (fast.next.next == head) {
+            fast = fast.next;
+        }
+
+        Node head2 = slow.next;   // start of second half
+
+        slow.next = head;         // close first half
+        fast.next = head2;        // close second half
+
+        return new Pair<>(head, head2);
+    }
+}
